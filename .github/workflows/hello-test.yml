@@ -1,0 +1,13 @@
+name: Hello Test Pipeline
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  core-pipeline:
+    uses: k-int/github-actions/.github/workflows/hello-world.yml@main
+    secrets:
+      GITLAB_DEPLOY_USER: ${{ secrets.GITLAB_DEPLOY_USER }}
+      GITLAB_DEPLOY_TOKEN: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
