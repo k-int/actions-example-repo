@@ -1,4 +1,4 @@
-name: Hello Test Pipeline
+name: hello-world test pipeline
 
 on:
   push:
