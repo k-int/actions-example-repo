@@ -25,7 +25,7 @@ jobs:
   # Job 2: Call the central hub workflow to deliver the PR using your bash script
   deliver-compliance-pr:
     needs: generate-compliance-data
-    uses: k-int/github-actions/.github/workflows/commit-via-pr.yml@main
+    uses: k-int/github-actions/.github/workflows/commit-via-pr.yml@test
     with:
       artifact_name: 'transaction-compliance-assets'
       tracked_files: 'compliance-report.json'
