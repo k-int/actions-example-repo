@@ -7,7 +7,7 @@ on:
 
 jobs:
   core-pipeline:
-    uses: k-int/github-actions/.github/workflows/hello-world.yml@test
+    uses: k-int/github-actions/.github/workflows/hello-world.yml@main
     with:
       hello_text: "Hallo"
       world_text: "Vorld"
