@@ -7,7 +7,10 @@ on:
 
 jobs:
   core-pipeline:
-    uses: k-int/github-actions/.github/workflows/hello-world.yml@main
+    uses: k-int/github-actions/.github/workflows/hello-world.yml@test
+    with:
+      hello_text: "Hallo"
+      world_text: "Vorld"
     secrets:
       GITLAB_DEPLOY_USER: ${{ secrets.GITLAB_DEPLOY_USER }}
       GITLAB_DEPLOY_TOKEN: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
