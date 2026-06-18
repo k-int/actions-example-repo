@@ -1,0 +1,39 @@
+name: Artifact Delivery PR Example
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # Job 1: Simulate asset generation
+  generate-compliance-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Generate Dummy Asset
+        run: |
+          echo "Simulated data matrix generated at: $(date)" > compliance-report.json
+
+      - name: Upload Report to Pipeline Storage
+        uses: actions/upload-artifact@v5
+        with:
+          name: transaction-compliance-assets
+          path: compliance-report.json
+          retention-days: 1
+
+  # Job 2: Call the central hub workflow to deliver the PR using your bash script
+  deliver-compliance-pr:
+    needs: generate-compliance-data
+    uses: k-int/github-actions/.github/workflows/commit-via-pr.yml@main
+    with:
+      artifact_name: 'transaction-compliance-assets'
+      tracked_files: 'compliance-report.json'
+      commit_message: 'chore: update compliance transaction ledger'
+      branch_prefix: 'compliance-delivery'
+      base_branch: 'main'
+      pr_title: 'Automated Compliance Ledger Update'
+      pr_body: 'This PR was automatically generated using our shared bash delivery utilities.'
+    secrets:
+      GITLAB_DEPLOY_USER: ${{ secrets.GITLAB_DEPLOY_USER }}
+      GITLAB_DEPLOY_TOKEN: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
