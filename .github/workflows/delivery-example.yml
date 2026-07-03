@@ -1,0 +1,94 @@
+name: 'Clone and fetch suite'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pipeline-delivery:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Core Workspace
+        uses: actions/checkout@v4
+
+      # =============================================================================
+      # TRACK 1: GITHUB INGESTION VALIDATION
+      # =============================================================================
+      - name: Clone GitHub Repo
+        uses: k-int/github-actions/.github/actions/clone@test
+        with:
+          provider: "github"
+          repo: "k-int/github-actions"
+          ref: "main"
+          dest_dir: "workspace/github-repo"
+          deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
+          deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+
+      - name: Verify GitHub Clone
+        run: ls -la workspace/github-repo
+
+      - name: Fetch GitHub File
+        uses: k-int/github-actions/.github/actions/fetch-file@test
+        with:
+          provider: "github"
+          repo: "k-int/github-actions"
+          ref: "main"
+          source_path: "example-file.txt"
+          output_file: "workspace/fetched-github-file.txt"
+          deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
+          deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+
+      # =============================================================================
+      # TRACK 2: GITLAB INGESTION VALIDATION
+      # =============================================================================
+      - name: Clone GitLab Repo
+        uses: k-int/github-actions/.github/actions/clone@test
+        with:
+          provider: "gitlab"
+          repo: "knowledge-integration/pipeline-utils/example-pipeline-project"
+          ref: "main"
+          dest_dir: "workspace/gitlab-repo"
+          deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
+          deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+
+      - name: Verify GitLab Clone
+        run: ls -la workspace/gitlab-repo
+
+      - name: Fetch GitLab File
+        uses: k-int/github-actions/.github/actions/fetch-file@test
+        with:
+          provider: "gitlab"
+          repo: "knowledge-integration/pipeline-utils/example-pipeline-project"
+          ref: "main"
+          source_path: "example-file.txt"
+          output_file: "workspace/fetched-gitlab-file.txt"
+          deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
+          deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+
+      # =============================================================================
+      # TRACK 3: CENTRALIZED UNIFIED CONTENT OUTPUT VERIFICATION
+      # =============================================================================
+      - name: Verify Fetched Files
+        run: |
+          echo "📋 Checking out raw data strings from delivered assets..."
+          echo "========================================================"
+          echo "🔹 Source Target: GitHub (k-int/github-actions)"
+          echo "========================================================"
+          if [ -f "workspace/fetched-github-file.txt" ]; then
+            cat "workspace/fetched-github-file.txt"
+          else
+            echo "❌ Error: GitHub target file delivery failed."
+            exit 1
+          fi
+          
+          echo -e "\n========================================================"
+          echo "🔹 Source Target: GitLab (example-pipeline-project)"
+          echo "========================================================"
+          if [ -f "workspace/fetched-gitlab-file.txt" ]; then
+            cat "workspace/fetched-gitlab-file.txt"
+          else
+            echo "❌ Error: GitLab target file delivery failed."
+            exit 1
+          fi
