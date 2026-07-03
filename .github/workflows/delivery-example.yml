@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Clone GitHub Repo
-        uses: k-int/github-actions/.github/actions/clone@test
+        uses: k-int/github-actions/.github/actions/clone@main
         with:
           provider: "github"
           repo: "k-int/actions-example-repo"
@@ -31,7 +31,7 @@ jobs:
         run: ls -la workspace/github-repo
 
       - name: Clone GitLab Repo
-        uses: k-int/github-actions/.github/actions/clone@test
+        uses: k-int/github-actions/.github/actions/clone@main
         with:
           provider: "gitlab"
           repo: "knowledge-integration/pipeline-utils/example-pipeline-project"
@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Fetch GitHub File
-        uses: k-int/github-actions/.github/actions/fetch-file@test
+        uses: k-int/github-actions/.github/actions/fetch-file@main
         with:
           provider: "github"
           repo: "k-int/actions-example-repo"
@@ -75,7 +75,7 @@ jobs:
           fi
 
       - name: Fetch GitLab File
-        uses: k-int/github-actions/.github/actions/fetch-file@test
+        uses: k-int/github-actions/.github/actions/fetch-file@main
         with:
           provider: "gitlab"
           repo: "knowledge-integration/pipeline-utils/example-pipeline-project"
