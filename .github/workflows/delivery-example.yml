@@ -25,6 +25,7 @@ jobs:
           dest_dir: "workspace/github-repo"
           deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
           deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+          core_tooling_dir: ".core-tooling/clone-gh"
 
       - name: Verify GitHub Clone
         run: ls -la workspace/github-repo
@@ -38,6 +39,7 @@ jobs:
           dest_dir: "workspace/gitlab-repo"
           deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
           deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+          core_tooling_dir: ".core-tooling/clone-gl"
 
       - name: Verify GitLab Clone
         run: ls -la workspace/gitlab-repo
@@ -61,6 +63,7 @@ jobs:
           output_file: "workspace/fetched-github-file.txt"
           deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
           deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+          core_tooling_dir: ".core-tooling/fetch-gh"
 
       - name: Verify GitHub Fetch
         run: |
@@ -81,6 +84,7 @@ jobs:
           output_file: "workspace/fetched-gitlab-file.txt"
           deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
           deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+          core_tooling_dir: ".core-tooling/fetch-gl"
 
       - name: Verify GitLab Fetch
         run: |
