@@ -1,0 +1,56 @@
+name: 'Single File Fetch Matrix'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  orchestrate-fetches:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - provider: "github"
+            repo: "k-int/actions-example-repo"
+            ref: "main"
+            src_path: "example-file.txt"
+            out_file: "workspace/fetched-github-file.txt"
+
+          - provider: "gitlab"
+            repo: "knowledge-integration/pipeline-utils/example-pipeline-project"
+            ref: "main"
+            src_path: "example-file.txt"
+            out_file: "workspace/fetched-gitlab-file.txt"
+
+    steps:
+      - name: Checkout Context
+        uses: actions/checkout@v4
+
+      # 💡 1. Core Tool execution runs natively as a step inside your local matrix
+      - name: Fetch File
+        uses: k-int/github-actions/.github/actions/fetch-file@test
+        with:
+          provider: ${{ matrix.provider }}
+          repo: ${{ matrix.repo }}
+          ref: ${{ matrix.ref }}
+          source_path: ${{ matrix.src_path }}
+          output_file: ${{ matrix.out_file }}
+          deploy_user: ${{ secrets.GITLAB_DEPLOY_USER }}
+          deploy_token: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
+
+      # 💡 2. Simple, binary-safe verification step executing right afterward
+      - name: Verify Fetched File
+        run: |
+          if [ -f "${{ matrix.out_file }}" ]; then
+            METADATA=$(file -b "${{ matrix.out_file }}")
+            echo "File Type: $METADATA"
+            echo "--------------------------------------------------------"
+            if [[ "$METADATA" == *"text"* || "$METADATA" == *"JSON"* ]]; then
+              cat "${{ matrix.out_file }}"
+            else
+              echo "ℹ️ Binary file detected. Raw output skipped."
+            fi
+          fi
