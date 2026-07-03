@@ -20,7 +20,7 @@ jobs:
         uses: k-int/github-actions/.github/actions/clone@test
         with:
           provider: "github"
-          repo: "k-int/github-actions"
+          repo: "k-int/actions-example-repo"
           ref: "main"
           dest_dir: "workspace/github-repo"
           deploy_user:  ${{ secrets.GITLAB_DEPLOY_USER }}
@@ -57,7 +57,7 @@ jobs:
         uses: k-int/github-actions/.github/actions/fetch-file@test
         with:
           provider: "github"
-          repo: "k-int/github-actions"
+          repo: "k-int/actions-example-repo"
           ref: "main"
           source_path: "example-file.txt"
           output_file: "workspace/fetched-github-file.txt"
